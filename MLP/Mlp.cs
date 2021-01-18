@@ -4,6 +4,7 @@ using System.Text;
 
 namespace MLP
 {
+    [Serializable]
     class Mlp
     {
         public List<Capas> capas;

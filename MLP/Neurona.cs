@@ -4,6 +4,7 @@ using System.Text;
 
 namespace MLP
 {
+    [Serializable]
     class Neurona
     {
         public double[] pesos;

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MLP
 {
+    [Serializable]
     class Capas
     {
         public List<Neurona> neuronas;  ///lista de neuronas

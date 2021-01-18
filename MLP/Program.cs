@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MLP
 {
@@ -10,7 +13,11 @@ namespace MLP
 
         static int NumEntradas = 7;
         static int NumSalidas = 4;
-        static string Path = @"D:\DESCARGAS\prueba.csv";
+        static string Path = @"D:\DESCARGAS\prueba.csv";                //@"C:\Users\feran\Downloads\prueba.csv";
+        static string MlpPath = @"D:\DESCARGAS\ParametrosMlp.bin";      //@"C:\Users\feran\Downloads\ParametrosMlp.bin";
+
+        static bool CargarMlp = true;
+        static bool GuardarMlp = true;
 
         static void LeerData()
         {
@@ -44,19 +51,59 @@ namespace MLP
 
         static void Main(string[] args)
         {
-           
 
-            LeerData();
-            Mlp p = new Mlp(new int[] { entradas[0].Length, 3, salidas[0].Length });// cuantas neuronas hay por capa -- una capa oculta con 3 neuronas
-           
-            while (!p.Aprender(entradas, salidas, 0.09, 0.15, 20000))  //entrada a la red - salida esperada - aprendizaje - error maximo permitido - iteraciones
+            Mlp p;
+            if (!CargarMlp)
             {
-                p = new Mlp(new int[] { entradas[0].Length, 3, salidas[0].Length });
+                LeerData();
+                p = new Mlp(new int[] { entradas[0].Length, 3, salidas[0].Length });// cuantas neuronas hay por capa -- una capa oculta con 3 neuronas
+
+                while (!p.Aprender(entradas, salidas, 0.09, 0.15, 20000))  //entrada a la red - salida esperada - aprendizaje - error maximo permitido - iteraciones
+                {
+                    p = new Mlp(new int[] { entradas[0].Length, 3, salidas[0].Length });
+                }
+                if (GuardarMlp)
+                {
+                    FileStream fs = new FileStream(MlpPath, FileMode.Create);
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    try
+                    {
+                        formatter.Serialize(fs, p);
+                    }
+                    catch (SerializationException e)
+                    {
+                        Console.WriteLine("No se pudo serializar, motivo: " + e.Message);
+                        throw;
+                    }
+                    finally
+                    {
+                        fs.Close();
+                    }
+                }
+
             }
-            
+            else
+            {
+                FileStream fs = new FileStream(MlpPath, FileMode.Open);
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    p = (Mlp)formatter.Deserialize(fs);
+                }
+                catch(SerializationException e)
+                {
+                    Console.WriteLine("Error en deserializacion. motivo :" + e.Message);
+                    throw;
+                }
+                finally
+                {
+                    fs.Close();
+                }
+            }
+
+            // pregunta
             while (true)
             {
-
                 double[] val = new double[NumEntradas];
                 for (int i = 0; i < NumEntradas; i++)
                 {
