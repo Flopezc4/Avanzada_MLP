@@ -76,7 +76,7 @@ namespace MLP
                
                 Backpropagation(ejemplosInput,ejemplosOutputs,alfa);
                 error = ErrorGeneral(ejemplosInput, ejemplosOutputs);
-               // Console.WriteLine(error);
+                Console.WriteLine(error+" ------" + maxIterations );
             }
             Console.WriteLine(error);
             return true;

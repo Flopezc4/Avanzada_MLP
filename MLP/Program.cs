@@ -11,12 +11,12 @@ namespace MLP
         static List<double[]> entradas = new List<double[]>();
         static List<double[]> salidas = new List<double[]>();
 
-        static int NumEntradas = 7;
-        static int NumSalidas = 4;
-        static string Path = @"D:\DESCARGAS\prueba.csv";                //@"C:\Users\feran\Downloads\prueba.csv";
-        static string MlpPath = @"D:\DESCARGAS\ParametrosMlp.bin";      //@"C:\Users\feran\Downloads\ParametrosMlp.bin";
+        static int NumEntradas = 16;
+        static int NumSalidas = 3;
+        static string Path = @"D:\DESCARGAS\datos50.csv";                //@"C:\Users\feran\Downloads\prueba.csv";
+        static string MlpPath = @"D:\DESCARGAS\ParametrosMlp51.bin";      //@"C:\Users\feran\Downloads\ParametrosMlp.bin";
 
-        static bool CargarMlp = true;
+        static bool CargarMlp = false;
         static bool GuardarMlp = true;
 
         static void LeerData()
@@ -28,7 +28,8 @@ namespace MLP
             for (int i = 0; i < row.Length; i++)
             {
                 string[] rowData = row[i].Split(';');
-
+               Console.WriteLine(rowData.Length+"-------------------------------------" );
+                Console.WriteLine();
                 double[] inputs = new double[NumEntradas];
                 double[] outputs = new double[NumSalidas];
 
@@ -37,12 +38,16 @@ namespace MLP
                     if (j < NumEntradas)
                     {
                         inputs[j] = double.Parse(rowData[j]);
+                        Console.Write(inputs[j]+"-");
                     }
                     else
                     {
                         outputs[j - NumEntradas] = double.Parse(rowData[j]);
+                        Console.Write(outputs[j - NumEntradas]+"-" );
                     }
+               
                 }
+                Console.WriteLine();
                 entradas.Add(inputs);
                 salidas.Add(outputs);
             }
@@ -56,11 +61,11 @@ namespace MLP
             if (!CargarMlp)
             {
                 LeerData();
-                p = new Mlp(new int[] { entradas[0].Length, 3, salidas[0].Length });// cuantas neuronas hay por capa -- una capa oculta con 3 neuronas
+                p = new Mlp(new int[] { entradas[0].Length,8, salidas[0].Length });// cuantas neuronas hay por capa -- una capa oculta con 3 neuronas
 
-                while (!p.Aprender(entradas, salidas, 0.09, 0.15, 20000))  //entrada a la red - salida esperada - aprendizaje - error maximo permitido - iteraciones
+                while (!p.Aprender(entradas, salidas, 0.05, 0.9, 70000))  //entrada a la red - salida esperada - aprendizaje - error maximo permitido - iteraciones
                 {
-                    p = new Mlp(new int[] { entradas[0].Length, 3, salidas[0].Length });
+                    p = new Mlp(new int[] { entradas[0].Length,8, salidas[0].Length });
                 }
                 if (GuardarMlp)
                 {
