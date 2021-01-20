@@ -158,13 +158,13 @@ namespace MLP
                 }
             }
         }
-        public void Backpropagation(List<double[]> inputs, List<double[]> outputs, double alfa)
+        public void Backpropagation(List<double[]> entradas, List<double[]> salidas, double alfa)
         {
             ResetearDeltas();
-            for(int i = 0; i < inputs.Count; i++)
+            for(int i = 0; i < entradas.Count; i++)
             {
-                Activacion(inputs[i]);
-                SetSigmas(outputs[i]);
+                Activacion(entradas[i]);
+                SetSigmas(salidas[i]);
                 
                 SetBias(alfa);
                 AddDelta();        ///van a ser modificados por cada vez que introduzcamos un valor de input y sea comparado con outputs
